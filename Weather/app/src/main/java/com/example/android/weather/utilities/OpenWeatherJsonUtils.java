@@ -48,7 +48,6 @@ public final class OpenWeatherJsonUtils {
 
         if (forecastJson.has(OWM_MESSAGE_CODE)) {
             int errorCode = forecastJson.getInt(OWM_MESSAGE_CODE);
-
             switch (errorCode) {
                 case HttpURLConnection.HTTP_OK:
                     break;
@@ -60,11 +59,8 @@ public final class OpenWeatherJsonUtils {
         }
 
         JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
-
         parsedWeatherData = new String[weatherArray.length()];
-
         long startDay = SunshineDateUtils.getNormalizedUtcDateForToday();
-
         for (int i = 0; i < weatherArray.length(); i++) {
             String date;
             String highAndLow;
@@ -81,8 +77,7 @@ public final class OpenWeatherJsonUtils {
             dateTimeMillis = startDay + SunshineDateUtils.DAY_IN_MILLIS * i;
             date = SunshineDateUtils.getFriendlyDateString(context, dateTimeMillis, false);
 
-            JSONObject weatherObject =
-                    dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
+            JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
 
             weatherId = weatherObject.getInt(OWM_WEATHER_ID);
             description = SunshineWeatherUtils.getStringForWeatherCondition(context, weatherId);
@@ -102,10 +97,8 @@ public final class OpenWeatherJsonUtils {
             throws JSONException {
 
         JSONObject forecastJson = new JSONObject(forecastJsonStr);
-
         if (forecastJson.has(OWM_MESSAGE_CODE)) {
             int errorCode = forecastJson.getInt(OWM_MESSAGE_CODE);
-
             switch (errorCode) {
                 case HttpURLConnection.HTTP_OK:
                     break;
@@ -131,7 +124,6 @@ public final class OpenWeatherJsonUtils {
         long normalizedUtcStartDay = SunshineDateUtils.getNormalizedUtcDateForToday();
 
         for (int i = 0; i < jsonWeatherArray.length(); i++) {
-
             long dateTimeMillis;
             double pressure;
             int humidity;
@@ -152,8 +144,7 @@ public final class OpenWeatherJsonUtils {
             windSpeed = dayForecast.getDouble(OWM_WINDSPEED);
             windDirection = dayForecast.getDouble(OWM_WIND_DIRECTION);
 
-            JSONObject weatherObject =
-                    dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
+            JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
 
             weatherId = weatherObject.getInt(OWM_WEATHER_ID);
 

@@ -15,27 +15,38 @@
         <xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g>
     </string>
 
-    <!-- - - - - - - - - - - - - - - -->
-    <!-- Used by SunshineWeatherUtils-->
-    <!-- - - - - - - - - - - - - - - -->
-    <!-- Temperature format in Celsius [CHAR LIMIT=5] -->
-    <string name="format_temperature_celsius">
-        <xliff:g id="temp">%1.0f</xliff:g>\u00B0C
+    <!-- - - - - - - - - - - - - - - - -
+      - Used by SunshineWeatherUtils   -
+      - - - - - - - - - - - - - - - - -->
+
+    <!-- Temperature format -->
+    <string name="format_temperature">
+        <xliff:g id="temp">%1.0f</xliff:g>\u00B0
     </string>
 
-    <!-- Temperature format in Fahrenheit [CHAR LIMIT=5] -->
-    <string name="format_temperature_fahrenheit">
-        <xliff:g id="temp">%1.0f</xliff:g>\u00B0F
-    </string>
-
-    <!-- Wind in kph [CHAR LIMIT=25] -->
+    <string name="wind_label">Wind</string>
+    <!-- Wind in kph -->
     <string name="format_wind_kmh">
-        <xliff:g id="speed">%1$1.0f</xliff:g> km/h <xliff:g id="direction">%2$s</xliff:g>
+        <xliff:g id="speed">%1$1.0f</xliff:g> km/h
+        <xliff:g id="direction">%2$s</xliff:g>
     </string>
 
-    <!-- Wind in mph [CHAR LIMIT=25] -->
+    <!-- Wind in mph -->
     <string name="format_wind_mph">
-        <xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g>
+        <xliff:g id="speed">%1$1.0f</xliff:g> mph
+        <xliff:g id="direction">%2$s</xliff:g>
+    </string>
+
+    <string name="pressure_label">Pressure</string>
+    <!-- Pressure format -->
+    <string name="format_pressure">
+        <xliff:g id="pressure">%1.0f</xliff:g> hPa
+    </string>
+
+    <string name="humidity_label">Humidity</string>
+    <!-- Humidity format -->
+    <string name="format_humidity">
+        <xliff:g id="humidity">%1.0f</xliff:g> %%
     </string>
 
     <!--By convention, "action" denotes that this String will be used as the label for an Action,-->
@@ -48,9 +59,14 @@
     <!--Used in overflow menu to refresh weather data-->
     <string name="action_refresh">Refresh</string>
 
+    <string name="title_activity_detail">Details</string>
+    <string name="title_activity_settings">Settings</string>
+
     <string name="error_message">
         An error has occurred. Please try again by clicking REFRESH
     </string>
+
+    <string name="content_authority">com.example.android.weather</string>
 
 
     <!-- - - - - - - - - - - -->
@@ -83,6 +99,8 @@
 
     <!-- Value in SharedPreferences for imperial temperature unit option [CHAR LIMIT=NONE] -->
     <string name="pref_units_imperial" translatable="false">imperial</string>
+
+    <string name="pref_last_notification">last_notification</string>
 
     <!-- Weather Conditions (From OpenWeatherMap) -->
     <string name="condition_2xx">Storm</string>
@@ -142,5 +160,19 @@
     <string name="condition_961">Violent Storm</string>
     <string name="condition_962">Hurricane</string>
     <string name="condition_unknown">Unknown (<xliff:g id="conditionId">%1$d</xliff:g>)</string>
+
+    <string name="a11y_forecast">Forecast: <xliff:g id="condition">%1$s</xliff:g></string>
+    <string name="a11y_forecast_icon">Forecast icon: <xliff:g id="condition">%1$s</xliff:g></string>
+    <string name="a11y_high_temp">High: <xliff:g id="high">%1$s</xliff:g></string>
+    <string name="a11y_low_temp">Low: <xliff:g id="low">%1$s</xliff:g></string>
+    <string name="a11y_humidity">Humidity: <xliff:g id="humidity">%1$s</xliff:g></string>
+    <string name="a11y_pressure">Barometric Pressure: <xliff:g id="pressure">%1$s</xliff:g></string>
+    <string name="a11y_wind">Wind speed and direction: <xliff:g id="wind">%1$s</xliff:g></string>
+
+    <string name="format_notification">
+        Forecast:<xliff:g id="condition">%1$s</xliff:g> -
+        High:<xliff:g id="high">%2$s</xliff:g>
+        Low:<xliff:g id="low">%3$s</xliff:g>
+    </string>
 
 </resources>

@@ -1,6 +1,9 @@
 package com.example.android.weather.data;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
+
+import com.example.android.weather.utilities.SunshineDateUtils;
 
 /**
  * Created by zhuangzhili on 2018-01-09.
@@ -8,7 +11,17 @@ import android.provider.BaseColumns;
 
 public class WeatherContract {
 
+    public static final String CONTENT_AUTHORITY = "com.example.android.weather";
+
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+
+    public static final String PATH_WEATHER = "weather";
+
     public static final class WeatherEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_WEATHER)
+                .build();
 
         public static final String TABLE_NAME = "weather";
 
@@ -26,6 +39,17 @@ public class WeatherContract {
         public static final String COLUMN_WIND_SPEED = "wind";
 
         public static final String COLUMN_DEGREES = "degrees";
+
+        public static Uri buildWeatherUriWithDate(long date) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(Long.toString(date))
+                    .build();
+        }
+
+        public static String getSqlSelectForTodayOnwards() {
+            long normalizedUtcNow = SunshineDateUtils.normalizeDate(System.currentTimeMillis());
+            return WeatherContract.WeatherEntry.COLUMN_DATE + " >= " + normalizedUtcNow;
+        }
     }
 
 }

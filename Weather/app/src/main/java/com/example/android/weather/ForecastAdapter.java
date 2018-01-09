@@ -1,11 +1,16 @@
 package com.example.android.weather;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.android.weather.utilities.SunshineDateUtils;
+import com.example.android.weather.utilities.SunshineWeatherUtils;
 
 import java.util.List;
 
@@ -15,66 +20,71 @@ import java.util.List;
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapterViewHolder>{
 
-    private String[] mWeatherData;
+    private final Context mContext;
 
-    private final ForecastAdapterOnClickHandler mClickHandler;
+    final private ForecastAdapterOnClickHandler mClickHandler;
 
     public interface ForecastAdapterOnClickHandler {
-        void onClick(String weatherForDay);
+        void onClick(long date);
     }
 
-    public ForecastAdapter(ForecastAdapterOnClickHandler clickHandler) {
+    private Cursor mCursor;
+
+    public ForecastAdapter(@NonNull Context context, ForecastAdapterOnClickHandler clickHandler) {
+        mContext = context;
         mClickHandler = clickHandler;
     }
 
-    /*cache of the children views for a forecast list item*/
-    public class ForecastAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final TextView mWeatherTextView;
-
-        public ForecastAdapterViewHolder(View view) {
-            super(view);
-            mWeatherTextView = (TextView) view.findViewById(R.id.tv_weather_data);
-        }
-
-        @Override
-        public void onClick(View view) {
-            int adapterPosition = getAdapterPosition();
-            String weatherForDay = mWeatherData[adapterPosition];
-            mClickHandler.onClick(weatherForDay);
-        }
-    }
-
-    /*return a new ForecastAdapterViewHolder that holds the view for each list item. Called when new ViewHOlder is created*/
     @Override
-    public ForecastAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        int layoutIdForListItem = R.layout.forecast_list_item;
-        LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
-
-        View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
+    public ForecastAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater
+                .from(mContext)
+                .inflate(R.layout.forecast_list_item, viewGroup, false);
+        view.setFocusable(true);
         return new ForecastAdapterViewHolder(view);
     }
 
-    /*called by the recyclerview to display the data at the specified position*/
     @Override
-    public void onBindViewHolder(ForecastAdapterViewHolder holder, int position) {
-        String weatherForThisDay = mWeatherData[position];
-        holder.mWeatherTextView.setText(weatherForThisDay);
+    public void onBindViewHolder(ForecastAdapterViewHolder forecastAdapterViewHolder, int position) {
+        mCursor.moveToPosition(position);
+        long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE);
+        String dateString = SunshineDateUtils.getFriendlyDateString(mContext, dateInMillis, false);
+        int weatherId = mCursor.getInt(MainActivity.INDEX_WEATHER_CONDITION_ID);
+        String description = SunshineWeatherUtils.getStringForWeatherCondition(mContext, weatherId);
+        double highInCelsius = mCursor.getDouble(MainActivity.INDEX_WEATHER_MAX_TEMP);
+        double lowInCelsius = mCursor.getDouble(MainActivity.INDEX_WEATHER_MIN_TEMP);
+        String highAndLowTemperature = SunshineWeatherUtils.formatHighLows(mContext, highInCelsius, lowInCelsius);
+        String weatherSummary = dateString + " - " + description + " - " + highAndLowTemperature;
+        forecastAdapterViewHolder.weatherSummary.setText(weatherSummary);
     }
 
-    /*return the number of items available in the forecast*/
     @Override
     public int getItemCount() {
-        if (mWeatherData == null) {
-            return 0;
-        }
-        return mWeatherData.length;
+        if (null == mCursor) return 0;
+        return mCursor.getCount();
     }
 
-    /*save the weatherData to mWeatherData*/
-    public void setWeatherData(String[] weatherData) {
-        mWeatherData = weatherData;
+    void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
         notifyDataSetChanged();
+    }
+
+    class ForecastAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        final TextView weatherSummary;
+        ForecastAdapterViewHolder(View view) {
+            super(view);
+
+            weatherSummary = (TextView) view.findViewById(R.id.tv_weather_data);
+
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            mCursor.moveToPosition(adapterPosition);
+            long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE);
+            mClickHandler.onClick(dateInMillis);
+        }
     }
 }
