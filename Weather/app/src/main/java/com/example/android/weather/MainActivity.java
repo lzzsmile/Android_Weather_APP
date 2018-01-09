@@ -1,14 +1,18 @@
 package com.example.android.weather;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.weather.data.SunshinePreferences;
 import com.example.android.weather.utilities.NetworkUtils;
@@ -16,24 +20,39 @@ import com.example.android.weather.utilities.OpenWeatherJsonUtils;
 
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
-
-    private TextView mWeatherTextView;
+public class MainActivity extends AppCompatActivity implements ForecastAdapter.ForecastAdapterOnClickHandler {
 
     private TextView mErrorMessageDisplay;
 
     private ProgressBar mLoadingIndicator;
+
+    private RecyclerView mRecyclerView;
+
+    private ForecastAdapter mForecastAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mWeatherTextView = (TextView) findViewById(R.id.tv_weather_data);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_forecast);
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        mForecastAdapter = new ForecastAdapter(this);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mForecastAdapter);
 
         loadWeatherData();
+    }
+
+    @Override
+    public void onClick(String weatherForDay) {
+        Context context = this;
+        Toast.makeText(context, weatherForDay, Toast.LENGTH_SHORT).show();
     }
 
     private void loadWeatherData() {
@@ -44,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void showWeatherDataView() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-        mWeatherTextView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage() {
-        mWeatherTextView.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
@@ -83,9 +102,7 @@ public class MainActivity extends AppCompatActivity {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (strings != null) {
                 showWeatherDataView();
-                for (String weatherString : strings) {
-                    mWeatherTextView.append((weatherString) + "\n\n\n");
-                }
+                mForecastAdapter.setWeatherData(strings);
             } else {
                 showErrorMessage();
             }
@@ -103,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            mWeatherTextView.setText("");
+            mForecastAdapter.setWeatherData(null);
             loadWeatherData();
             return true;
         }
