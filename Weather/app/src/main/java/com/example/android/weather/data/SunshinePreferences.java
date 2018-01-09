@@ -21,8 +21,13 @@ public class SunshinePreferences {
     private static final double[] DEFAULT_WEATHER_COORDINATES = {37.4284, 122.0724};
     private static final String DEFAULT_MAP_LOCATION = "1600 Amphitheatre Parkway, Mountain View, CA 94043";
 
-    public static void setLocationDetails(Context c, String cityName, double lat, double lon) {
+    public static void setLocationDetails(Context context, double lat, double lon) {
+        SharedPreferences sp = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
 
+        editor.putLong(PREF_COORD_LAT, Double.doubleToRawLongBits(lat));
+        editor.putLong(PREF_COORD_LONG, Double.doubleToRawLongBits(lon));
+        editor.apply();
     }
 
     public static void setLocation(Context c, String locationSetting, double lat, double lon) {

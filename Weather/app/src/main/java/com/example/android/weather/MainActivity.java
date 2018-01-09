@@ -23,7 +23,9 @@ import com.example.android.weather.data.SunshinePreferences;
 import com.example.android.weather.utilities.NetworkUtils;
 import com.example.android.weather.utilities.OpenWeatherJsonUtils;
 import java.net.URL;
-
+/**
+ * Created by zhuangzhili on 2018-01-09.
+ */
 public class MainActivity extends AppCompatActivity implements
         ForecastAdapter.ForecastAdapterOnClickHandler,
         LoaderCallbacks<String[]>,

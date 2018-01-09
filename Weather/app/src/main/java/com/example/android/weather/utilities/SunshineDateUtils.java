@@ -7,6 +7,7 @@ import com.example.android.weather.R;
 
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by zhuangzhili on 2018-01-07.
@@ -29,6 +30,22 @@ public class SunshineDateUtils {
         // Normalize the start date to the beginning of the (UTC) day in local time
         long retValNew = date / DAY_IN_MILLIS * DAY_IN_MILLIS;
         return retValNew;
+    }
+
+    public static long getNormalizedUtcDateForToday() {
+        long utcNowMillis = System.currentTimeMillis();
+
+        TimeZone currentTimeZone = TimeZone.getDefault();
+
+        long gmtOffsetMillis = currentTimeZone.getOffset(utcNowMillis);
+
+        long timeSinceEpochLocalTimeMillis = utcNowMillis + gmtOffsetMillis;
+
+        long daysSinceEpochLocal = TimeUnit.MILLISECONDS.toDays(timeSinceEpochLocalTimeMillis);
+
+        long normalizedUtcMidnightMillis = TimeUnit.DAYS.toMillis(daysSinceEpochLocal);
+
+        return normalizedUtcMidnightMillis;
     }
 
     public static long getLocalDateFromUTC(long utcDate) {
