@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.android.weather.data.SunshinePreferences;
 import com.example.android.weather.data.WeatherContract;
+import com.example.android.weather.sync.SunshineSyncUtils;
 import com.example.android.weather.utilities.FakeDataUtils;
 import com.example.android.weather.utilities.NetworkUtils;
 import com.example.android.weather.utilities.OpenWeatherJsonUtils;
@@ -64,8 +65,6 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         getSupportActionBar().setElevation(0f);
 
-        FakeDataUtils.insertFakeData(this);
-
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_forecast);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
@@ -84,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements
 
         getSupportLoaderManager().initLoader(ID_FORECAST_LOADER, null, this);
 
+        SunshineSyncUtils.initialize(this);
     }
 
     private void openPreferredLocationInMap() {

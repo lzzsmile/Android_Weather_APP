@@ -11,6 +11,7 @@ import android.support.v7.preference.PreferenceScreen;
 
 import com.example.android.weather.data.SunshinePreferences;
 import com.example.android.weather.data.WeatherContract;
+import com.example.android.weather.sync.SunshineSyncUtils;
 
 /**
  * Created by zhuangzhili on 2018-01-09.
@@ -68,6 +69,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         if (key.equals(getString(R.string.pref_location_key))) {
             SunshinePreferences.resetLocationCoordinates(activity);
+            SunshineSyncUtils.startImmediateSync(activity);
         } else if (key.equals(getString(R.string.pref_units_key))) {
             activity.getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
         }
